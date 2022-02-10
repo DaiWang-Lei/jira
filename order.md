@@ -22,3 +22,11 @@
 
   - 在husky的hooks里添加
     -  commit-msg:'commitlint -E HUSKY_GIT_PARAMS'
+
+# 配置相关Mock数据
+https://www.npmjs.com/package/json-server
+- 1、安装json-server
+    yarn add json-server -D
+- 2、添加相关文件夹，并在文件夹中添加db.json文件
+- 3、添加相关脚本
+  "json-server": "json-server __json_server_mock__/db.json  --watch ",
