@@ -40,9 +40,9 @@ export const ProjectListPage = () => {
 
   return (
     <div>
-      {/* <SearchPanel users={users} param={param} setParam={setParam} /> */}
-      {/* <ProjectList users={users} list={list} /> */}
-      <TsReactTest />
+      <SearchPanel users={users} param={param} setParam={setParam} />
+      <ProjectList users={users} list={list} />
+      {/* <TsReactTest /> */}
     </div>
   );
 };
