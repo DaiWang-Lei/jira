@@ -1,19 +1,10 @@
+import { useAuth } from "context/authContext";
 import { FormEvent } from "react";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 export const LoginPages = () => {
-  const login = (param: { username: string; password: string }) => {
-    fetch(`${apiUrl}/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(param),
-    }).then(async (resp) => {
-      if (resp.ok) {
-      }
-    });
-  };
+  const { user, login } = useAuth();
+
   const handleSubmit = (eve: FormEvent<HTMLFormElement>) => {
     eve.preventDefault();
     const { value: username } = eve.currentTarget
@@ -24,6 +15,7 @@ export const LoginPages = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
+      {user ? <div>登录成功，当前用户名为：{user?.name}</div> : null}
       <div>
         <label htmlFor="username">用户名</label>
         <input type="text" id="username" />
