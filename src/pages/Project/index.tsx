@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useMout } from "utils";
+import { cleanObject, useDebounce, useMount } from "utils";
 import { ProjectList } from "./list";
 import { SearchPanel } from "./searchPanel";
 import qs from "qs";
 import { TsReactTest } from "./try-use-array";
+import { useHttp } from "utils/http";
 
 type userProps = { name: string; id: string };
 
@@ -18,25 +19,16 @@ export const ProjectListPage = () => {
   });
   const debounceParam = useDebounce(param, 500);
   const [list, setList] = useState([]);
+  const client = useHttp();
 
   useEffect(() => {
-    fetch(
-      `${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`
-    ).then(async (resp) => {
-      if (resp.ok) {
-        setList(await resp.json());
-      }
-    });
+    client("projects", { data: cleanObject(debounceParam) }).then(setList);
   }, [debounceParam]);
 
   const getUser = () => {
-    fetch(`${apiUrl}/users`).then(async (resp) => {
-      if (resp.ok) {
-        setUsers(await resp.json());
-      }
-    });
+    client("users").then(setUsers);
   };
-  useMout(getUser);
+  useMount(getUser);
 
   return (
     <div>
