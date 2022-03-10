@@ -1,4 +1,5 @@
 import { Table } from "antd";
+import dayjs from "dayjs";
 import React from "react";
 import { UserProps } from "./searchPanel";
 
@@ -8,6 +9,7 @@ type ProjectProps = {
   personId: string;
   organization: string;
   pin: boolean;
+  created: number;
 };
 
 type ListProps = {
@@ -27,12 +29,28 @@ export const ProjectList: React.FC<ListProps> = ({ list, users }) => {
           sorter: (a, b) => a.name.localeCompare(b.name),
         },
         {
+          title: "部门",
+          dataIndex: "organization",
+        },
+        {
           title: "负责人",
           render(value, project) {
             return (
               <span>
                 {users.find((user) => user.id === project.personId)?.name ||
                   "未知"}
+              </span>
+            );
+          },
+        },
+        {
+          title: "创建时间",
+          render(value, record) {
+            return (
+              <span>
+                {record.created
+                  ? dayjs(record.created).format("YYYY-MM-DD")
+                  : "无"}
               </span>
             );
           },

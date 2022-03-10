@@ -5,6 +5,7 @@ import { SearchPanel } from "./searchPanel";
 import qs from "qs";
 import { TsReactTest } from "./try-use-array";
 import { useHttp } from "utils/http";
+import styled from "@emotion/styled";
 
 type userProps = { name: string; id: string };
 
@@ -31,10 +32,15 @@ export const ProjectListPage = () => {
   useMount(getUser);
 
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPanel users={users} param={param} setParam={setParam} />
       <ProjectList users={users} list={list} />
       {/* <TsReactTest /> */}
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  margin-left: 3.2rem;
+`;

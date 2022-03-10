@@ -1,4 +1,5 @@
-import { Input, Select } from "antd";
+import { jsx } from "@emotion/react";
+import { Form, Input, Select } from "antd";
 import React, { FC, useEffect, useState } from "react";
 
 export type UserProps = {
@@ -25,8 +26,8 @@ export const SearchPanel: FC<SearchPanelProps> = ({
   setParam,
 }) => {
   return (
-    <form>
-      <div>
+    <Form style={{ marginBottom: "2rem" }} layout={"inline"}>
+      <Form.Item>
         <Input
           type="text"
           value={param.name}
@@ -35,6 +36,8 @@ export const SearchPanel: FC<SearchPanelProps> = ({
             setParam({ ...param, name: eve.target.value });
           }}
         />
+      </Form.Item>
+      <Form.Item>
         <Select
           value={param.personId}
           onChange={(value) => setParam({ ...param, personId: value })}
@@ -46,7 +49,7 @@ export const SearchPanel: FC<SearchPanelProps> = ({
             </option>
           ))}
         </Select>
-      </div>
-    </form>
+      </Form.Item>
+    </Form>
   );
 };
