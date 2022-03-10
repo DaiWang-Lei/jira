@@ -11,7 +11,7 @@ export const handleUserResponse = ({ user }: { user: UserProps }) => {
 };
 
 export const login = (data: { username: string; password: string }) => {
-  return fetch(`${apiUrl}/login`, {
+  return window.fetch(`${apiUrl}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

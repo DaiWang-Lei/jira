@@ -1,3 +1,4 @@
+import { Input, Select } from "antd";
 import React, { FC, useEffect, useState } from "react";
 
 export type UserProps = {
@@ -26,7 +27,7 @@ export const SearchPanel: FC<SearchPanelProps> = ({
   return (
     <form>
       <div>
-        <input
+        <Input
           type="text"
           value={param.name}
           onChange={(eve) => {
@@ -34,17 +35,17 @@ export const SearchPanel: FC<SearchPanelProps> = ({
             setParam({ ...param, name: eve.target.value });
           }}
         />
-        <select
+        <Select
           value={param.personId}
-          onChange={(eve) => setParam({ ...param, personId: eve.target.value })}
+          onChange={(value) => setParam({ ...param, personId: value })}
         >
-          <option value="">负责人</option>
+          <Select.Option value="">负责人</Select.Option>
           {users.map((user) => (
             <option key={user.id} value={user.id}>
               {user.name}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
     </form>
   );
