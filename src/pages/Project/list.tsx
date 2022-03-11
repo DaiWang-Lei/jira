@@ -1,9 +1,9 @@
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 import { UserProps } from "./searchPanel";
 
-type ProjectProps = {
+export type ProjectProps = {
   id: string;
   name: string;
   personId: string;
@@ -12,12 +12,12 @@ type ProjectProps = {
   created: number;
 };
 
-type ListProps = {
+export type ListProps = {
   list: ProjectProps[];
   users: UserProps[];
-};
+} & TableProps<any>;
 
-export const ProjectList: React.FC<ListProps> = ({ list, users }) => {
+export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
   return (
     <Table
       pagination={false}
@@ -56,6 +56,7 @@ export const ProjectList: React.FC<ListProps> = ({ list, users }) => {
           },
         },
       ]}
+      {...props}
     />
   );
 };

@@ -33,7 +33,7 @@ export const SearchPanel: FC<SearchPanelProps> = ({
           value={param.name}
           onChange={(eve) => {
             debugger;
-            setParam({ ...param, name: eve.target.value });
+            setParam({ ...param, name: eve.target.value.trim() });
           }}
         />
       </Form.Item>
