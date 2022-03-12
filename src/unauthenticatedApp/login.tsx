@@ -4,11 +4,15 @@ import { FormEvent } from "react";
 import { LongButton } from "unauthenticatedApp";
 const apiUrl = process.env.REACT_APP_API_URL;
 
-export const LoginPages = () => {
+export const LoginPages = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { user, login } = useAuth();
 
   const handleSubmit = (values: { username: string; password: string }) =>
-    login(values);
+    login(values).catch(onError);
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item

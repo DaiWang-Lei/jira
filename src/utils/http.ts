@@ -6,7 +6,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 type Config = { token?: string; data?: Object } & RequestInit;
 export const http = async (
   endpoint: string,
-  { data, token, headers, ...customConfig }: Config={}
+  { data, token, headers, ...customConfig }: Config = {}
 ) => {
   const config = {
     method: "GET",
@@ -35,6 +35,9 @@ export const http = async (
       } else {
         return Promise.reject(data);
       }
+    }).catch(e => {
+      console.log(e);
+      debugger
     });
 };
 

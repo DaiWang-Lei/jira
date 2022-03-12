@@ -7,6 +7,7 @@ import { http } from "utils/http";
 type AuthForm = {
   username: string;
   password: string;
+  repassword?: string;
 };
 
 const initUser = async () => {
@@ -39,7 +40,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     auth.register(form).then((user) => setUser(user));
 
   useMount(() => {
-    debugger;
     initUser().then(setUser);
   });
 

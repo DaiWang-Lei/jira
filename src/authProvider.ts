@@ -20,14 +20,14 @@ export const login = (data: { username: string; password: string }) => {
   }).then(async (resp) => {
     if (resp.ok) {
       return handleUserResponse(await resp.json());
-    }else{
-      return Promise.reject(resp)
+    } else {
+      return Promise.reject(await resp.json())
     }
   });
 };
 
-export const register = (data: { username: string; password: string }) => {
- return fetch(`${apiUrl}/register`, {
+export const register = (data: { username: string; password: string; repassowrd: string }) => {
+  return fetch(`${apiUrl}/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,11 +36,12 @@ export const register = (data: { username: string; password: string }) => {
   }).then(async (resp) => {
     if (resp.ok) {
       return handleUserResponse(await resp.json());
-    }else{
-      return Promise.reject(resp)
+    } else {
+      debugger;
+      return Promise.reject(await resp.json())
     }
-  });
+  })
 };
 
 
-export const logout =async ()=>window.localStorage.removeItem(localStorageKey)
+export const logout = async () => window.localStorage.removeItem(localStorageKey)

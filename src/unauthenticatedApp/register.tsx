@@ -4,11 +4,18 @@ import { FormEvent } from "react";
 import { LongButton } from "unauthenticatedApp";
 const apiUrl = process.env.REACT_APP_API_URL;
 
-export const RigisterPages = () => {
+export const RigisterPages = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { user, register } = useAuth();
 
-  const handleSubmit = (values: { username: string; password: string }) =>
-    register(values);
+  const handleSubmit = (values: {
+    username: string;
+    password: string;
+    repassword: string;
+  }) => register(values).catch(onError);
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item
@@ -22,6 +29,12 @@ export const RigisterPages = () => {
         rules={[{ required: true, message: "请输入密码" }]}
       >
         <Input placeholder="密码" type="password" id="password" />
+      </Form.Item>
+      <Form.Item
+        name={"repassword"}
+        rules={[{ required: true, message: "请确认密码" }]}
+      >
+        <Input placeholder="确认密码" type="repassword" id="repassword" />
       </Form.Item>
       <Form.Item>
         <LongButton htmlType="submit" type="primary">
