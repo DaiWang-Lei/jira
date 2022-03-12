@@ -11,11 +11,19 @@ export const RigisterPages = ({
 }) => {
   const { user, register } = useAuth();
 
-  const handleSubmit = (values: {
+  const handleSubmit = ({
+    repassword,
+    ...values
+  }: {
     username: string;
     password: string;
-    repassword: string;
-  }) => register(values).catch(onError);
+  } & { repassword: string }) => {
+    if (values.password !== repassword) {
+      onError(new Error("请确认密码是否一致！"));
+      return;
+    }
+    register(values).catch(onError);
+  };
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item
