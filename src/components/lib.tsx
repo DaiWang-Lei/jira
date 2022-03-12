@@ -29,6 +29,7 @@ const FullPage = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 export const FullPageLoading = () => (
   <FullPage>
     <Spin size={"large"} />
