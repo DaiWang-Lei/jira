@@ -1,6 +1,7 @@
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import React from "react";
+import { Link } from "react-router-dom";
 import { UserProps } from "./searchPanel";
 
 export type ProjectProps = {
@@ -25,8 +26,10 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, project) {
+            return <Link to={`${project.id}`}>{project.name}</Link>;
+          },
         },
         {
           title: "部门",

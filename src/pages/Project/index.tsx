@@ -16,7 +16,6 @@ export const ProjectListPage = () => {
   const { isLoading, error, data: list } = useProjects(param);
   const { data: users } = useUser();
 
-  console.log(isLoading);
   useDocumentTitle("任务列表", false);
   return (
     <Container>

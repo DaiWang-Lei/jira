@@ -35,10 +35,7 @@ export const http = async (
       } else {
         return Promise.reject(data);
       }
-    }).catch(e => {
-      console.log(e);
-      debugger
-    });
+    })
 };
 
 export const useHttp = () => {
