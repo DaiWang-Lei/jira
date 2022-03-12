@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 type FallbackRender = (props: { error: Error | null }) => React.ReactElement;
-// 错误边界
+// 错误边界 可用react-error-boundary替代
 export class ErrorBoundary extends React.Component<
   React.PropsWithChildren<{ fallbackRender: FallbackRender }>,
   { error: Error | null }

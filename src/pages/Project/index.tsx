@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useMount } from "utils";
+import { cleanObject, useDebounce, useDocumentTitle, useMount } from "utils";
 import { ProjectList, ProjectProps } from "./list";
 import { SearchPanel } from "./searchPanel";
 import { useHttp } from "utils/http";
@@ -17,7 +17,7 @@ export const ProjectListPage = () => {
   const { data: users } = useUser();
 
   console.log(isLoading);
-
+  useDocumentTitle("任务列表", false);
   return (
     <Container>
       <h1>项目列表</h1>
