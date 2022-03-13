@@ -7,16 +7,16 @@ import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUser } from "utils/user";
+import { useUrlQueryParam } from "utils/url";
+import { useProjectSearchParams } from "./util";
 
 export const ProjectListPage = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
-  const { isLoading, error, data: list } = useProjects(param);
+  useDocumentTitle("任务列表", false);
+
+  const [param, setParam] = useProjectSearchParams();
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
   const { data: users } = useUser();
 
-  useDocumentTitle("任务列表", false);
   return (
     <Container>
       <h1>项目列表</h1>
@@ -25,10 +25,11 @@ export const ProjectListPage = () => {
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
       <ProjectList loading={isLoading} users={users || []} list={list || []} />
-      {/* <TsReactTest /> */}
     </Container>
   );
 };
+
+ProjectListPage.whyDidYouRender = true;
 
 const Container = styled.div`
   margin-left: 3.2rem;

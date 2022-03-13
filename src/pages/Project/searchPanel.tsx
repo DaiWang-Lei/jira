@@ -1,9 +1,12 @@
 import { jsx } from "@emotion/react";
 import { Form, Input, Select } from "antd";
+import { IdSelect } from "components/idSelect";
+import { UserSelect } from "components/userSelect";
 import React, { FC, useEffect, useState } from "react";
+import { ProjectProps } from "./list";
 
 export type UserProps = {
-  id: string;
+  id: number;
   name: string;
   email: string;
   title: string;
@@ -13,10 +16,7 @@ export type UserProps = {
 
 type SearchPanelProps = {
   users: UserProps[];
-  param: {
-    name: string;
-    personId: string;
-  };
+  param: Partial<Pick<ProjectProps, "name" | "personId">>;
   setParam: (param: SearchPanelProps["param"]) => void;
 };
 
@@ -32,23 +32,16 @@ export const SearchPanel: FC<SearchPanelProps> = ({
           type="text"
           value={param.name}
           onChange={(eve) => {
-            debugger;
             setParam({ ...param, name: eve.target.value.trim() });
           }}
         />
       </Form.Item>
       <Form.Item>
-        <Select
+        <UserSelect
+          defaultOptionName="负责人"
           value={param.personId}
           onChange={(value) => setParam({ ...param, personId: value })}
-        >
-          <Select.Option value="">负责人</Select.Option>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name}
-            </option>
-          ))}
-        </Select>
+        />
       </Form.Item>
     </Form>
   );
