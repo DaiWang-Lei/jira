@@ -4,8 +4,10 @@ import { ProjectListPage } from "pages/Project";
 import { ReactComponent as HeadImg } from "assets/software-logo.svg";
 import { Row } from "components/lib";
 import { Button, Dropdown, Menu } from "antd";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
+import { ProjectScreen } from "pages/projectScreen";
+import { resetRoute } from "utils";
 
 export const AuthenticatedApp = () => {
   return (
@@ -15,7 +17,11 @@ export const AuthenticatedApp = () => {
         <Router>
           <Routes>
             <Route path={"/projects"} element={<ProjectListPage />} />
-            <Route path={"/projects/:projectId/*"} element={<>pageScreen</>} />
+            <Route
+              path={"/projects/:projectId/*"}
+              element={<ProjectScreen />}
+            />
+            <Route path={"*"} element={<Navigate to={"/projects"} />} />
           </Routes>
         </Router>
       </Main>
@@ -29,7 +35,9 @@ const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
-        <HeadImg width={"18rem"} color="rgb(28,123,255)" />
+        <Button type={"link"} onClick={resetRoute}>
+          <HeadImg width={"18rem"} color="rgb(28,123,255)" />
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>
