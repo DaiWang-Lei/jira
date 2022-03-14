@@ -14,7 +14,12 @@ export const ProjectListPage = () => {
   useDocumentTitle("任务列表", false);
 
   const [param, setParam] = useProjectSearchParams();
-  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
+  const {
+    isLoading,
+    error,
+    data: list,
+    retry,
+  } = useProjects(useDebounce(param, 200));
   const { data: users } = useUser();
 
   return (
@@ -24,7 +29,12 @@ export const ProjectListPage = () => {
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
-      <ProjectList loading={isLoading} users={users || []} list={list || []} />
+      <ProjectList
+        refresh={retry}
+        loading={isLoading}
+        users={users || []}
+        list={list || []}
+      />
     </Container>
   );
 };

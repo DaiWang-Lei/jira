@@ -1,7 +1,9 @@
 import { Table, TableProps } from "antd";
+import { Pin } from "components/pin";
 import dayjs from "dayjs";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useEditProject } from "utils/project";
 import { UserProps } from "./searchPanel";
 
 export type ProjectProps = {
@@ -16,14 +18,30 @@ export type ProjectProps = {
 export type ListProps = {
   list: ProjectProps[];
   users: UserProps[];
+  refresh?: () => void;
 } & TableProps<any>;
 
 export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
+  const { mutate } = useEditProject();
+  // 柯里化方式，先消化id
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh);
   return (
     <Table
       pagination={false}
       dataSource={list}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={pinProject(project.id)}
+              />
+            );
+          },
+        },
         {
           title: "名称",
           sorter: (a, b) => a.name.localeCompare(b.name),
