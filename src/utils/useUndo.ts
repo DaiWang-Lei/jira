@@ -1,26 +1,26 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 
-export const useUndo = <T>(initPresent: T) => {
-  const [state, setState] = useState<{
-    past: T[]; // 过去
-    present: T; // 现在
-    future: T[]; //将来
-  }>({
-    past: [],
-    present: initPresent,
-    future: [],
-  });
+const UNDO = "UNDO";
+const REDO = "REDO";
+const SET = "SET";
+const RESET = "RESET";
 
-  const canUndo = state.past.length !== 0; // 有历史，可以回退
-  const canReDo = state.future.length !== 0; // 有未来，可以前进
+type StateProps<T> = {
+  past: T[]; // 过去
+  present: T; // 现在
+  future: T[]; //将来
+};
 
-  // 回退
-  const unDo = useCallback(() => {
-    setState((curState) => {
-      const { past, present, future } = curState;
-
-      if (past.length === 0) return curState;
-
+type ActionProps<T> = {
+  newPresent?: T;
+  type: typeof UNDO | typeof REDO | typeof SET | typeof RESET;
+};
+const undoReducer = <T>(state: StateProps<T>, action: ActionProps<T>) => {
+  const { past, present, future } = state;
+  const { type, newPresent } = action;
+  switch (type) {
+    case UNDO: {
+      if (past.length === 0) return state;
       // 回退列表中，最近的元素
       const previous = past[past.length - 1];
       //去掉最近的元素后的，可回退列表
@@ -32,53 +32,64 @@ export const useUndo = <T>(initPresent: T) => {
         present: previous,
         future: newFuture,
       };
-    });
-  }, []);
-
-  //  前进
-  const reDo = useCallback(() => {
-    setState((curState) => {
-      const { past, present, future } = curState;
-      if (future.length === 0) return curState;
+    }
+    case REDO: {
+      if (future.length === 0) return state;
 
       const previous = future[0];
-
       const newPast = [...past, present];
-
       const newFuture = future.slice(1);
       return {
         past: newPast,
         present: previous,
         future: newFuture,
       };
-    });
-  }, []);
-
-  const set = useCallback((newPresent: T) => {
-    setState((curState) => {
-      const { past, present, future } = curState;
-
-      if (newPresent === present) return curState;
+    }
+    case SET: {
+      if (newPresent === present) return state;
       const previous = newPresent;
-
       const newPast = [...past, present];
       return {
         past: newPast,
         present: previous,
         future: [],
       };
-    });
-  }, []);
-
-  const reset = useCallback((newPresent) => {
-    setState((curState) => {
+    }
+    case RESET: {
       return {
         past: [],
         present: newPresent,
         future: [],
       };
-    });
-  }, []);
+    }
+  }
+ };
 
-  return [state, { set, reset, unDo, reDo }];
+export const useUndo = <T>(initPresent: T) => {
+  const [state, dispatch] = useReducer(undoReducer, {
+    past: [],
+    present: initPresent,
+    future: [],
+  } as StateProps<T>);
+
+  const canUndo = state.past.length !== 0; // 有历史，可以回退
+  const canReDo = state.future.length !== 0; // 有未来，可以前进
+
+  // 回退
+  const unDo = useCallback(() => dispatch({ type: UNDO }), []);
+
+  //  前进
+  const reDo = useCallback(() => dispatch({ type: REDO }), []);
+
+  const set = useCallback(
+    (newPresent: T) => dispatch({ type: SET, newPresent }),
+    []
+  );
+
+  const reset = useCallback(
+    (newPresent) => dispatch({ type: SET, newPresent }),
+    []
+  );
+
+  return [state, { set, reset, unDo, reDo, canUndo, canReDo }];
 };

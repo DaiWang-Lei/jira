@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import { useMountedRef } from "utils";
 
 type State<D> = {
@@ -11,33 +11,55 @@ const defaultInitState: State<null> = {
   data: null,
   stat: "pending",
 };
-export const useAsync = <D>(initState?: State<D>) => {
-  const [state, setState] = useState<State<D>>({
-    ...defaultInitState,
-    ...initState,
-  });
+
+const defaultConfig = {
+  throwOnError: false,
+};
+
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
   const mountedRef = useMountedRef();
+  return useCallback(
+    (...args: T[]) => (mountedRef.current ? dispatch(...args) : void 0),
+    [dispatch, mountedRef]
+  );
+};
+export const useAsync = <D>(
+  initState?: State<D>,
+  initConfig?: typeof defaultConfig
+) => {
+  const [state, dispatch] = useReducer(
+    (state: State<D>, action: Partial<State<D>>) => ({
+      ...state,
+      ...action,
+    }),
+    {
+      ...defaultInitState,
+      ...initState,
+    }
+  );
+  const safeDispatch = useSafeDispatch(dispatch);
+  const [retry, setRetry] = useState(() => () => {});
+
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispatch({
         error: null,
         data: data,
         stat: "success",
       }),
-    []
+    [safeDispatch]
   );
 
   const setError = useCallback(
     (error: Error) =>
-      setState({
-        error: error,
+      safeDispatch({
+        error,
         data: null,
         stat: "error",
       }),
-    []
+    [safeDispatch]
   );
 
-  const [retry, setRetry] = useState(() => () => {});
   const running = useCallback(
     (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
       if (!promise || !promise.then()) {
@@ -51,11 +73,11 @@ export const useAsync = <D>(initState?: State<D>) => {
       });
 
       // 解决页面由于state重复改变，导致页面无限刷新问题
-      setState((preState) => ({ ...preState, stat: "loading" }));
+      safeDispatch({ stat: "loading" });
       return promise
         .then((data) => {
           //阻止在已卸载组件赋值
-          if (mountedRef.current) setData(data);
+          setData(data);
           return data;
         })
         .catch((err) => {
@@ -63,7 +85,7 @@ export const useAsync = <D>(initState?: State<D>) => {
           return err;
         });
     },
-    [mountedRef, setData, setError]
+    [setData, setError, safeDispatch]
   );
   return {
     isPending: state.stat === "pending",
