@@ -20,13 +20,13 @@ export type ListProps = {
   list: ProjectProps[];
   users: UserProps[];
   refresh?: () => void;
-  setProjectModalVisable: (visible: boolean) => void;
+  projectButton: JSX.Element;
 } & TableProps<any>;
 
 export const ProjectList: React.FC<ListProps> = ({
   list,
   users,
-  setProjectModalVisable,
+  projectButton,
   ...props
 }) => {
   const { mutate } = useEditProject();
@@ -89,14 +89,7 @@ export const ProjectList: React.FC<ListProps> = ({
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>
-                      <ButtonNoPadding
-                        type={"link"}
-                        onClick={() => setProjectModalVisable(true)}
-                      >
-                        编辑
-                      </ButtonNoPadding>
-                    </Menu.Item>
+                    <Menu.Item key={"edit"}>{projectButton}</Menu.Item>
                   </Menu>
                 }
               >

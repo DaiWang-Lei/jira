@@ -4,9 +4,9 @@ import { useProjects } from "utils/project";
 import { ButtonNoPadding } from "./lib";
 
 export const ProjectPopover = ({
-  setProjectModalVisable,
+  projectButton,
 }: {
-  setProjectModalVisable: (visible: boolean) => void;
+  projectButton: JSX.Element;
 }) => {
   const { data: projects, isLoading } = useProjects();
   //过滤出收藏的项目
@@ -22,12 +22,7 @@ export const ProjectPopover = ({
         ))}
       </List>
       <Divider />
-      <ButtonNoPadding
-        type={"link"}
-        onClick={() => setProjectModalVisable(true)}
-      >
-        创建项目
-      </ButtonNoPadding>
+      {projectButton}
     </ContentContailer>
   );
   return (

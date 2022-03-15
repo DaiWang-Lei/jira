@@ -12,9 +12,9 @@ import { useProjectSearchParams } from "./util";
 import { ButtonNoPadding, Row } from "components/lib";
 
 export const ProjectListPage = ({
-  setProjectModalVisable,
+  projectButton,
 }: {
-  setProjectModalVisable: (visible: boolean) => void;
+  projectButton: JSX.Element;
 }) => {
   useDocumentTitle("任务列表", false);
 
@@ -31,7 +31,7 @@ export const ProjectListPage = ({
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => setProjectModalVisable(true)}>创建项目</Button>
+        {projectButton}
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
@@ -42,7 +42,7 @@ export const ProjectListPage = ({
         loading={isLoading}
         users={users || []}
         list={list || []}
-        setProjectModalVisable={setProjectModalVisable}
+        projectButton={projectButton}
       />
     </Container>
   );
