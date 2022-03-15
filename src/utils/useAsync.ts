@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMountedRef } from "utils";
 
 type State<D> = {
   error: Error | null;
@@ -15,47 +16,55 @@ export const useAsync = <D>(initState?: State<D>) => {
     ...defaultInitState,
     ...initState,
   });
+  const mountedRef = useMountedRef();
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        error: null,
+        data: data,
+        stat: "success",
+      }),
+    []
+  );
 
-  const setData = (data: D) =>
-    setState({
-      error: null,
-      data: data,
-      stat: "success",
-    });
-
-  const setError = (error: Error) =>
-    setState({
-      error: error,
-      data: null,
-      stat: "error",
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error: error,
+        data: null,
+        stat: "error",
+      }),
+    []
+  );
 
   const [retry, setRetry] = useState(() => () => {});
-  const running = (
-    promise: Promise<D>,
-    runConfig?: { retry: () => Promise<D> }
-  ) => {
-    if (!promise || !promise.then()) {
-      throw new Error("请传入Promise 类型的数据");
-    }
-    //重新加载
-    setRetry(() => () => {
-      if(runConfig?.retry){
-        running(runConfig.retry(),runConfig)
+  const running = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then()) {
+        throw new Error("请传入Promise 类型的数据");
       }
-    });
-
-    setState({ ...state, stat: "loading" });
-    return promise
-      .then((data) => {
-        setData(data);
-        return data;
-      })
-      .catch((err) => {
-        setError(err);
-        return err;
+      //重新加载
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          running(runConfig.retry(), runConfig);
+        }
       });
-  };
+
+      // 解决页面由于state重复改变，导致页面无限刷新问题
+      setState((preState) => ({ ...preState, stat: "loading" }));
+      return promise
+        .then((data) => {
+          //阻止在已卸载组件赋值
+          if (mountedRef.current) setData(data);
+          return data;
+        })
+        .catch((err) => {
+          setError(err);
+          return err;
+        });
+    },
+    [mountedRef, setData, setError]
+  );
   return {
     isPending: state.stat === "pending",
     isLoading: state.stat === "loading",

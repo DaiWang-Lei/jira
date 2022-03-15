@@ -9,7 +9,7 @@ export const useUser = (param?: Partial<UserProps>) => {
   const { running, ...result } = useAsync<UserProps[]>();
   useEffect(() => {
     running(client("users", { data: cleanObject(param || {}) }));
-  }, [param]);
+  }, [param, running, client]);
 
   return result;
 };

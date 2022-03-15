@@ -1,5 +1,6 @@
 import { useAuth } from "context/authContext";
 import qs from "qs";
+import { useCallback } from "react";
 import { logout } from "../authProvider";
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -35,12 +36,15 @@ export const http = async (
       } else {
         return Promise.reject(data);
       }
-    })
+    });
 };
 
 export const useHttp = () => {
   const { user } = useAuth();
 
-  return (...[endpoint, config]: Parameters<typeof http>) =>
-    http(endpoint, { ...config, token: user?.token });
+  return useCallback(
+    (...[endpoint, config]: Parameters<typeof http>) =>
+      http(endpoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
 };
