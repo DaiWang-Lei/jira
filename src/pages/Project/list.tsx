@@ -1,4 +1,5 @@
-import { Table, TableProps } from "antd";
+import { Dropdown, Menu, Table, TableProps } from "antd";
+import { ButtonNoPadding } from "components/lib";
 import { Pin } from "components/pin";
 import dayjs from "dayjs";
 import React from "react";
@@ -19,9 +20,15 @@ export type ListProps = {
   list: ProjectProps[];
   users: UserProps[];
   refresh?: () => void;
+  setProjectModalVisable: (visible: boolean) => void;
 } & TableProps<any>;
 
-export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
+export const ProjectList: React.FC<ListProps> = ({
+  list,
+  users,
+  setProjectModalVisable,
+  ...props
+}) => {
   const { mutate } = useEditProject();
   // 柯里化方式，先消化id
   const pinProject = (id: number) => (pin: boolean) =>
@@ -73,6 +80,28 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
                   ? dayjs(record.created).format("YYYY-MM-DD")
                   : "无"}
               </span>
+            );
+          },
+        },
+        {
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key={"edit"}>
+                      <ButtonNoPadding
+                        type={"link"}
+                        onClick={() => setProjectModalVisable(true)}
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type={"link"}>...</ButtonNoPadding>
+              </Dropdown>
             );
           },
         },

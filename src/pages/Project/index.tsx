@@ -4,13 +4,18 @@ import { ProjectList, ProjectProps } from "./list";
 import { SearchPanel } from "./searchPanel";
 import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUser } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
 import { useProjectSearchParams } from "./util";
+import { ButtonNoPadding, Row } from "components/lib";
 
-export const ProjectListPage = () => {
+export const ProjectListPage = ({
+  setProjectModalVisable,
+}: {
+  setProjectModalVisable: (visible: boolean) => void;
+}) => {
   useDocumentTitle("任务列表", false);
 
   const [param, setParam] = useProjectSearchParams();
@@ -24,7 +29,10 @@ export const ProjectListPage = () => {
 
   return (
     <Container>
-      <h1>项目列表</h1>
+      <Row between={true}>
+        <h1>项目列表</h1>
+        <Button onClick={() => setProjectModalVisable(true)}>创建项目</Button>
+      </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
@@ -34,6 +42,7 @@ export const ProjectListPage = () => {
         loading={isLoading}
         users={users || []}
         list={list || []}
+        setProjectModalVisable={setProjectModalVisable}
       />
     </Container>
   );
@@ -42,5 +51,5 @@ export const ProjectListPage = () => {
 ProjectListPage.whyDidYouRender = true;
 
 const Container = styled.div`
-  margin-left: 3.2rem;
+  margin: 3.2rem;
 `;
