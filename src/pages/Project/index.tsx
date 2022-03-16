@@ -10,13 +10,12 @@ import { useUser } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
 import { useProjectSearchParams } from "./util";
 import { ButtonNoPadding, Row } from "components/lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "store/projectListSlice";
 
-export const ProjectListPage = ({
-  projectButton,
-}: {
-  projectButton: JSX.Element;
-}) => {
+export const ProjectListPage = () => {
   useDocumentTitle("任务列表", false);
+  const dispatch = useDispatch();
 
   const [param, setParam] = useProjectSearchParams();
   const {
@@ -31,7 +30,12 @@ export const ProjectListPage = ({
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {projectButton}
+        <ButtonNoPadding
+          type={"link"}
+          onClick={() => dispatch(projectListActions.openProjectModal)}
+        >
+          创建项目
+        </ButtonNoPadding>
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
@@ -42,7 +46,6 @@ export const ProjectListPage = ({
         loading={isLoading}
         users={users || []}
         list={list || []}
-        projectButton={projectButton}
       />
     </Container>
   );

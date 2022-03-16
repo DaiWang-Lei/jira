@@ -2,12 +2,12 @@ import styled from "@emotion/styled";
 import { Divider, List, Popover, Typography } from "antd";
 import { useProjects } from "utils/project";
 import { ButtonNoPadding } from "./lib";
+import { useDispatch } from "react-redux";
+import { projectListActions } from "store/projectListSlice";
 
-export const ProjectPopover = ({
-  projectButton,
-}: {
-  projectButton: JSX.Element;
-}) => {
+export const ProjectPopover = () => {
+  const dispatch = useDispatch();
+
   const { data: projects, isLoading } = useProjects();
   //过滤出收藏的项目
   const pinnedProjects = projects?.filter((project) => project.pin);
@@ -22,7 +22,12 @@ export const ProjectPopover = ({
         ))}
       </List>
       <Divider />
-      {projectButton}
+      <ButtonNoPadding
+        type={"link"}
+        onClick={() => dispatch(projectListActions.openProjectModal)}
+      >
+        创建项目
+      </ButtonNoPadding>
     </ContentContailer>
   );
   return (
