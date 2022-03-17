@@ -6,6 +6,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useEditProject } from "utils/project";
 import { UserProps } from "./searchPanel";
+import { useProjectModal } from "./util";
 
 export type ProjectProps = {
   id: number;
@@ -20,15 +21,10 @@ export type ListProps = {
   list: ProjectProps[];
   users: UserProps[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 } & TableProps<any>;
 
-export const ProjectList: React.FC<ListProps> = ({
-  list,
-  users,
-  projectButton,
-  ...props
-}) => {
+export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
+  const { open } = useProjectModal();
   const { mutate } = useEditProject();
   // 柯里化方式，先消化id
   const pinProject = (id: number) => (pin: boolean) =>
@@ -89,7 +85,12 @@ export const ProjectList: React.FC<ListProps> = ({
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>{projectButton}</Menu.Item>
+                    <Menu.Item key={"edit"}>
+                      {" "}
+                      <ButtonNoPadding type={"link"} onClick={open}>
+                        创建项目
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >

@@ -8,14 +8,10 @@ import { Button, Typography } from "antd";
 import { useProjects } from "utils/project";
 import { useUser } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
-import { useProjectSearchParams } from "./util";
+import { useProjectModal, useProjectSearchParams } from "./util";
 import { ButtonNoPadding, Row } from "components/lib";
 
-export const ProjectListPage = ({
-  projectButton,
-}: {
-  projectButton: JSX.Element;
-}) => {
+export const ProjectListPage = () => {
   useDocumentTitle("任务列表", false);
 
   const [param, setParam] = useProjectSearchParams();
@@ -26,12 +22,14 @@ export const ProjectListPage = ({
     retry,
   } = useProjects(useDebounce(param, 200));
   const { data: users } = useUser();
-
+  const { open } = useProjectModal();
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {projectButton}
+        <ButtonNoPadding type={"link"} onClick={open}>
+          创建项目
+        </ButtonNoPadding>
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       {error ? (
@@ -42,7 +40,6 @@ export const ProjectListPage = ({
         loading={isLoading}
         users={users || []}
         list={list || []}
-        projectButton={projectButton}
       />
     </Container>
   );
