@@ -23,7 +23,7 @@ export const AuthenticatedApp = () => {
         projectButton={
           <ButtonNoPadding
             type={"link"}
-            onClick={() => dispatch(projectListActions.openProjectModal)}
+            onClick={() => dispatch(projectListActions.openProjectModal())}
           >
             创建项目
           </ButtonNoPadding>

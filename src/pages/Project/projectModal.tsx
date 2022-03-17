@@ -7,7 +7,7 @@ import {
 
 export const ProjectModal = () => {
   const dispatch = useDispatch();
-  const closeFun = () => dispatch(projectListActions.closeProjectModal);
+  const closeFun = () => dispatch(projectListActions.closeProjectModal());
   return (
     <Drawer
       onClose={closeFun}

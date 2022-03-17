@@ -3,6 +3,8 @@ import { useAuth } from "context/authContext";
 import { FormEvent } from "react";
 import { LongButton } from "unauthenticatedApp";
 import { useAsync } from "utils/useAsync";
+import { useDispatch } from "react-redux";
+import { authSlice } from "store/authSlice";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 export const LoginPages = ({
@@ -14,6 +16,8 @@ export const LoginPages = ({
   const { running, isLoading } = useAsync();
   const handleSubmit = (values: { username: string; password: string }) =>
     running(login(values).catch(onError));
+
+  const dispatch = useDispatch();
   return (
     <Form onFinish={handleSubmit}>
       <Form.Item

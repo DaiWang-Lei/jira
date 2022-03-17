@@ -91,7 +91,7 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
                       <ButtonNoPadding
                         type={"link"}
                         onClick={() =>
-                          dispatch(projectListActions.openProjectModal)
+                          dispatch(projectListActions.openProjectModal())
                         }
                       >
                         创建项目

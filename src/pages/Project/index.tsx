@@ -32,7 +32,7 @@ export const ProjectListPage = () => {
         <h1>项目列表</h1>
         <ButtonNoPadding
           type={"link"}
-          onClick={() => dispatch(projectListActions.openProjectModal)}
+          onClick={() => dispatch(projectListActions.openProjectModal())}
         >
           创建项目
         </ButtonNoPadding>
