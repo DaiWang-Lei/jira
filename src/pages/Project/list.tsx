@@ -27,8 +27,7 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
   const { open } = useProjectModal();
   const { mutate } = useEditProject();
   // 柯里化方式，先消化id
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(props.refresh);
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   return (
     <Table
       pagination={false}

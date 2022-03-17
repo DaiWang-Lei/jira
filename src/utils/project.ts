@@ -1,58 +1,36 @@
 import { ProjectProps } from "pages/Project/list";
-import { useCallback, useEffect } from "react";
-import { cleanObject } from "utils";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useHttp } from "./http";
-import { useAsync } from "./useAsync";
 
 export const useProjects = (param?: Partial<ProjectProps>) => {
-  const client = useHttp();
-  const { running, ...result } = useAsync<ProjectProps[]>();
-
-  const fetchProjectsDatas = useCallback(
-    () =>
-      client("projects", {
-        data: cleanObject(param || {}),
-      }),
-    [cleanObject, param]
+  const ajax = useHttp();
+  return useQuery<ProjectProps[]>(["projects", param], () =>
+    ajax("projects", { data: param })
   );
-  useEffect(() => {
-    running(fetchProjectsDatas(), { retry: fetchProjectsDatas });
-  }, [param, running, fetchProjectsDatas]);
-  return result;
 };
 
 // 编辑项目列表
 export const useEditProject = () => {
-  const { running, ...asyncResult } = useAsync();
   const ajax = useHttp();
-  const mutate = (params: Partial<ProjectProps>) => {
-    return running(
-      ajax(`projects/${params.id}`, {
-        data: params,
-        method: "PATCH",
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<ProjectProps>) =>
+      ajax(`projects/${params.id}`, { method: "PATCH", data: params }),
+    {
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
 };
 
 // 新增项目
 export const useAddProject = () => {
-  const { running, ...asyncResult } = useAsync();
   const ajax = useHttp();
-  const mutate = (params: Partial<ProjectProps>) => {
-    return running(
-      ajax(`projects/${params.id}`, {
-        data: params,
-        method: "POST",
-      })
-    );
-  };
-  return {
-    mutate,
-    ...asyncResult,
-  };
+  const queryClient = useQueryClient();
+  return useMutation(
+    (params: Partial<ProjectProps>) =>
+      ajax(`projects/${params.id}`, { method: "POST", data: params }),
+    {
+      onSuccess: () => queryClient.invalidateQueries("projects"),
+    }
+  );
 };

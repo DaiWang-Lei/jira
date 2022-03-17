@@ -9,18 +9,13 @@ import { useProjects } from "utils/project";
 import { useUser } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
 import { useProjectModal, useProjectSearchParams } from "./util";
-import { ButtonNoPadding, Row } from "components/lib";
+import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 
 export const ProjectListPage = () => {
   useDocumentTitle("任务列表", false);
 
   const [param, setParam] = useProjectSearchParams();
-  const {
-    isLoading,
-    error,
-    data: list,
-    retry,
-  } = useProjects(useDebounce(param, 200));
+  const { isLoading, error, data: list } = useProjects(useDebounce(param, 200));
   const { data: users } = useUser();
   const { open } = useProjectModal();
   return (
@@ -32,15 +27,8 @@ export const ProjectListPage = () => {
         </ButtonNoPadding>
       </Row>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
-      {error ? (
-        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
-      ) : null}
-      <ProjectList
-        refresh={retry}
-        loading={isLoading}
-        users={users || []}
-        list={list || []}
-      />
+      <ErrorBox error={error} />
+      <ProjectList loading={isLoading} users={users || []} list={list || []} />
     </Container>
   );
 };
