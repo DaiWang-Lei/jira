@@ -1,4 +1,5 @@
 import { ProjectProps } from "pages/Project/list";
+import { useProjectSearchParams } from "pages/Project/util";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useHttp } from "./http";
 
@@ -13,11 +14,31 @@ export const useProjects = (param?: Partial<ProjectProps>) => {
 export const useEditProject = () => {
   const ajax = useHttp();
   const queryClient = useQueryClient();
+
+  const [searchParams] = useProjectSearchParams();
+  const queryKey = ["projects", searchParams];
   return useMutation(
     (params: Partial<ProjectProps>) =>
       ajax(`projects/${params.id}`, { method: "PATCH", data: params }),
     {
-      onSuccess: () => queryClient.invalidateQueries("projects"),
+      onSuccess: () => queryClient.invalidateQueries(queryKey),
+      async onMutate(target) {
+        const previousItems = queryClient.getQueriesData(queryKey);
+        queryClient.setQueryData(queryKey, (old?: ProjectProps[]) => {
+          return (
+            old?.map((project) =>
+              project.id === target.id ? { ...project, ...target } : project
+            ) || []
+          );
+        });
+        return previousItems;
+      },
+      onError(error, newItem, context) {
+        queryClient.setQueryData(
+          queryKey,
+          (context as { previousItems: ProjectProps[] }).previousItems
+        );
+      },
     }
   );
 };
