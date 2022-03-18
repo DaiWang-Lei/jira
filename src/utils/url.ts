@@ -14,8 +14,12 @@ export const useUrlQueryParam = <T extends string>(keys: T[]) => {
       [searchParams]
     ),
     (params: Partial<{ [key in T]: unknown }>) => {
-        const o = cleanObject({...Object.fromEntries(searchParams),...params}) as URLSearchParamsInit
-        return setSearchParams(o)
+      const o = cleanObject({
+        // ...Object.fromEntries(searchParams),
+        ...params,
+      }) as URLSearchParamsInit;
+      debugger;
+      return setSearchParams(o);
     },
   ] as const;
 };

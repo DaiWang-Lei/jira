@@ -13,6 +13,7 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
       delete res[key];
     }
   });
+  debugger;
   return res;
 };
 

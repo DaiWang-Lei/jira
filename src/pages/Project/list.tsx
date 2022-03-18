@@ -28,6 +28,10 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
   const { mutate } = useEditProject();
   // 柯里化方式，先消化id
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+
+  const { startEdit } = useProjectModal();
+  const editProject = (id: number) => () => startEdit(id);
+
   return (
     <Table
       pagination={false}
@@ -84,12 +88,10 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={"edit"}>
-                      {" "}
-                      <ButtonNoPadding type={"link"} onClick={open}>
-                        创建项目
-                      </ButtonNoPadding>
+                    <Menu.Item key={"edit"} onClick={editProject(project.id)}>
+                      修改
                     </Menu.Item>
+                    <Menu.Item key={"delete"}>删 除</Menu.Item>
                   </Menu>
                 }
               >

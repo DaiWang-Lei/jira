@@ -28,9 +28,21 @@ export const useAddProject = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<ProjectProps>) =>
-      ajax(`projects/${params.id}`, { method: "POST", data: params }),
+      ajax(`projects`, { method: "POST", data: params }),
     {
       onSuccess: () => queryClient.invalidateQueries("projects"),
     }
+  );
+};
+
+// 获取项目详细信息
+export const useProjectInfo = (id?: number) => {
+  const ajax = useHttp();
+  console.log(id);
+
+  return useQuery<ProjectProps>(
+    ["project", { id }],
+    () => ajax(`projects/${id}`),
+    { enabled: Boolean(id) }
   );
 };
