@@ -33,7 +33,7 @@ export const ProjectListPage = () => {
   );
 };
 
-ProjectListPage.whyDidYouRender = true;
+ProjectListPage.whyDidYouRender = false;
 
 const Container = styled.div`
   margin: 3.2rem;

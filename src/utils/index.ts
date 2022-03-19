@@ -13,7 +13,6 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
       delete res[key];
     }
   });
-  debugger;
   return res;
 };
 
@@ -34,7 +33,6 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 };
 
 export const useArray = <T>(array: T[]) => {
-  debugger;
   const [value, setValue] = useState(array);
   const clear = () => setValue([]);
   const add = (params: T) => setValue([...value, params]);

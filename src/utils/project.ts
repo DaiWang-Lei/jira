@@ -47,7 +47,6 @@ export const useDeleteProject = (queryKey:QueryKey) => {
 // 获取项目详细信息
 export const useProjectInfo = (id?: number) => {
   const ajax = useHttp();
-  console.log(id);
 
   return useQuery<ProjectProps>(
     ["project", { id }],

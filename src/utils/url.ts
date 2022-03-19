@@ -18,7 +18,6 @@ export const useUrlQueryParam = <T extends string>(keys: T[]) => {
         // ...Object.fromEntries(searchParams),
         ...params,
       }) as URLSearchParamsInit;
-      debugger;
       return setSearchParams(o);
     },
   ] as const;

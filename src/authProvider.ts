@@ -37,7 +37,6 @@ export const register = (data: { username: string; password: string;}) => {
     if (resp.ok) {
       return handleUserResponse(await resp.json());
     } else {
-      debugger;
       return Promise.reject(await resp.json())
     }
   })

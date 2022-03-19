@@ -29,19 +29,15 @@ export const useProjectModal = () => {
     Number(editingProjectId)
   );
 
-
-
   const open = () => {
-    setProjectCreate({ projectCreate: true })};
+    setProjectCreate({ projectCreate: true });
+  };
   const close = () => {
-    debugger;
     setProjectCreate({ projectCreate: undefined });
     setEditingProjectId({ editingProjectId: undefined });
-
-
   };
   const startEdit = (id: number) =>
-  setEditingProjectId({ editingProjectId: id });
+    setEditingProjectId({ editingProjectId: id });
 
   return {
     projectModalVisible: projectCreate === "true" || Boolean(editingProject),
