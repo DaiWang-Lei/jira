@@ -2,6 +2,7 @@ import * as auth from "authProvider";
 import { FullPageErrorFallback, FullPageLoading } from "components/lib";
 import { UserProps } from "pages/Project/searchPanel";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import { useMount } from "utils";
 import { http } from "utils/http";
 import { useAsync } from "utils/useAsync";
@@ -42,8 +43,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     error,
     running,
   } = useAsync<UserProps | null>();
+  const queryClient = useQueryClient();
   const login = (form: AuthForm) => auth.login(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      queryClient.clear();
+    });
   const register = (form: AuthForm) =>
     auth.register(form).then((user) => setUser(user));
 
