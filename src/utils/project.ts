@@ -1,7 +1,8 @@
 import { ProjectProps } from "pages/Project/list";
 import { useProjectSearchParams } from "pages/Project/util";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 import { useHttp } from "./http";
+import { useAddConfig, useDeleteConfig, useEditConfig } from "./useOptimisticOptions";
 
 export const useProjects = (param?: Partial<ProjectProps>) => {
   const ajax = useHttp();
@@ -9,53 +10,40 @@ export const useProjects = (param?: Partial<ProjectProps>) => {
     ajax("projects", { data: param })
   );
 };
+export const useProjectQueryKey = () => {
+  const [searchParams] = useProjectSearchParams();
+  return ["projects", searchParams];
+};
 
 // 编辑项目列表
-export const useEditProject = () => {
+export const useEditProject = (queryKey:QueryKey) => {
   const ajax = useHttp();
-  const queryClient = useQueryClient();
-
-  const [searchParams] = useProjectSearchParams();
-  const queryKey = ["projects", searchParams];
   return useMutation(
     (params: Partial<ProjectProps>) =>
       ajax(`projects/${params.id}`, { method: "PATCH", data: params }),
-    {
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
-      async onMutate(target) {
-        const previousItems = queryClient.getQueriesData(queryKey);
-        queryClient.setQueryData(queryKey, (old?: ProjectProps[]) => {
-          return (
-            old?.map((project) =>
-              project.id === target.id ? { ...project, ...target } : project
-            ) || []
-          );
-        });
-        return previousItems;
-      },
-      onError(error, newItem, context) {
-        queryClient.setQueryData(
-          queryKey,
-          (context as { previousItems: ProjectProps[] }).previousItems
-        );
-      },
-    }
+    useEditConfig(queryKey)
   );
 };
 
 // 新增项目
-export const useAddProject = () => {
+export const useAddProject = (queryKey:QueryKey) => {
   const ajax = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<ProjectProps>) =>
       ajax(`projects`, { method: "POST", data: params }),
-    {
-      onSuccess: () => queryClient.invalidateQueries("projects"),
-    }
+    useAddConfig(queryKey)
   );
 };
 
+// 删除项目
+export const useDeleteProject = (queryKey:QueryKey) => {
+  const ajax = useHttp();
+  return useMutation(
+    (id: number) =>
+      ajax(`projects/${id}`, { method: "DELETE"}),
+    useDeleteConfig(queryKey)
+  );
+};
 // 获取项目详细信息
 export const useProjectInfo = (id?: number) => {
   const ajax = useHttp();

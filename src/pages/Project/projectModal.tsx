@@ -4,7 +4,7 @@ import { useForm } from "antd/lib/form/Form";
 import { ErrorBox } from "components/lib";
 import { UserSelect } from "components/userSelect";
 import { useEffect } from "react";
-import { useAddProject, useEditProject } from "utils/project";
+import { useAddProject, useEditProject, useProjectQueryKey } from "utils/project";
 import { useProjectModal } from "./util";
 
 export const ProjectModal = () => {
@@ -13,8 +13,8 @@ export const ProjectModal = () => {
 
   const title = editingProject ? "编辑项目" : "创建项目";
 
-  const useMutateProject = editingProject ? useEditProject : useAddProject;
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject();
+  const useMutateProject = editingProject ? useEditProject : useAddProject;     
+  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject(useProjectQueryKey()) ;
 
   const [form] = useForm();
   const onFinish = (values: any) => {

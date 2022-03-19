@@ -1,10 +1,14 @@
-import { Dropdown, Menu, Table, TableProps } from "antd";
+import { Dropdown, Menu, Modal, Table, TableProps } from "antd";
 import { ButtonNoPadding } from "components/lib";
 import { Pin } from "components/pin";
 import dayjs from "dayjs";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useEditProject } from "utils/project";
+import {
+  useDeleteProject,
+  useEditProject,
+  useProjectQueryKey,
+} from "utils/project";
 import { UserProps } from "./searchPanel";
 import { useProjectModal } from "./util";
 
@@ -25,13 +29,24 @@ export type ListProps = {
 
 export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
   const { open } = useProjectModal();
-  const { mutate } = useEditProject();
+  const { mutate } = useEditProject(useProjectQueryKey());
   // 柯里化方式，先消化id
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
 
   const { startEdit } = useProjectModal();
   const editProject = (id: number) => () => startEdit(id);
 
+  const { mutate: deleteMutate } = useDeleteProject(useProjectQueryKey());
+  const confirmDeleteProject = (id: number) =>
+    Modal.confirm({
+      title: "确认删除这个项目？",
+      content: "点击确定删除",
+      onOk() {
+        deleteMutate(id);
+      },
+      okText: "确认",
+      cancelText: "取消",
+    });
   return (
     <Table
       pagination={false}
@@ -91,7 +106,12 @@ export const ProjectList: React.FC<ListProps> = ({ list, users, ...props }) => {
                     <Menu.Item key={"edit"} onClick={editProject(project.id)}>
                       修改
                     </Menu.Item>
-                    <Menu.Item key={"delete"}>删 除</Menu.Item>
+                    <Menu.Item
+                      key={"delete"}
+                      onClick={() => confirmDeleteProject(project.id)}
+                    >
+                      删 除
+                    </Menu.Item>
                   </Menu>
                 }
               >
