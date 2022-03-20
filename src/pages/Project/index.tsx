@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useDocumentTitle, useMount } from "utils";
-import { ProjectList, ProjectProps } from "./list";
-import { SearchPanel } from "./searchPanel";
-import { useHttp } from "utils/http";
 import styled from "@emotion/styled";
-import { Button, Typography } from "antd";
+import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
+import { useDebounce, useDocumentTitle } from "utils";
 import { useProjects } from "utils/project";
 import { useUser } from "utils/user";
-import { useUrlQueryParam } from "utils/url";
+import { ProjectList } from "./list";
+import { SearchPanel } from "./searchPanel";
 import { useProjectModal, useProjectSearchParams } from "./util";
-import { ButtonNoPadding, ErrorBox, Row } from "components/lib";
 
 export const ProjectListPage = () => {
   useDocumentTitle("任务列表", false);

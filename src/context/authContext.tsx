@@ -1,8 +1,8 @@
 import * as auth from "authProvider";
 import { FullPageErrorFallback, FullPageLoading } from "components/lib";
-import { UserProps } from "pages/Project/searchPanel";
-import React, { useState } from "react";
+import React from "react";
 import { useQueryClient } from "react-query";
+import { UserProps } from "types/UserProps";
 import { useMount } from "utils";
 import { http } from "utils/http";
 import { useAsync } from "utils/useAsync";

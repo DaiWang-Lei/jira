@@ -1,4 +1,4 @@
-import { UserProps } from "pages/Project/searchPanel";
+import { UserProps } from "types/UserProps";
 import { useEffect } from "react";
 import { cleanObject } from "utils";
 import { useHttp } from "./http";

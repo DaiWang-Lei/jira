@@ -1,4 +1,4 @@
-import { UserProps } from "pages/Project/searchPanel";
+import { UserProps } from "types/UserProps";
 
 const localStorageKey = "__auth_provider_token__";
 const apiUrl = process.env.REACT_APP_API_URL;

@@ -1,18 +1,8 @@
-import { jsx } from "@emotion/react";
-import { Form, Input, Select } from "antd";
-import { IdSelect } from "components/idSelect";
+import { Form, Input } from "antd";
 import { UserSelect } from "components/userSelect";
-import React, { FC, useEffect, useState } from "react";
-import { ProjectProps } from "./list";
-
-export type UserProps = {
-  id: number;
-  name: string;
-  email: string;
-  title: string;
-  organization: string;
-  token: string;
-};
+import { FC } from "react";
+import { ProjectProps } from "../../types/ProjectProps";
+import { UserProps } from "../../types/UserProps";
 
 type SearchPanelProps = {
   users: UserProps[];

@@ -7,19 +7,11 @@ import { Link } from "react-router-dom";
 import {
   useDeleteProject,
   useEditProject,
-  useProjectQueryKey,
+  useProjectQueryKey
 } from "utils/project";
-import { UserProps } from "./searchPanel";
+import { ProjectProps } from "../../types";
+import { UserProps } from "../../types/UserProps";
 import { useProjectModal } from "./util";
-
-export type ProjectProps = {
-  id: number;
-  name: string;
-  personId: number;
-  organization: string;
-  pin: boolean;
-  created: number;
-};
 
 export type ListProps = {
   list: ProjectProps[];

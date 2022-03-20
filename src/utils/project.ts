@@ -1,4 +1,4 @@
-import { ProjectProps } from "pages/Project/list";
+import { ProjectProps } from "types/ProjectProps";
 import { useProjectSearchParams } from "pages/Project/util";
 import { QueryKey, useMutation, useQuery, useQueryClient } from "react-query";
 import { useHttp } from "./http";
