@@ -32,5 +32,6 @@ export const ProjectListPage = () => {
 ProjectListPage.whyDidYouRender = false;
 
 const Container = styled.div`
+  width: 100%;
   margin: 3.2rem;
 `;

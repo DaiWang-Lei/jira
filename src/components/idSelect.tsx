@@ -16,7 +16,6 @@ const { Option } = Select;
 
 export const IdSelect: React.FC<IdSelectProps> = (props) => {
   const { value, onChange, defaultOptionName, options, ...restProps } = props;
-  console.log(value);
   return (
     <Select
       value={options?.length ? toNumber(value) : 0}

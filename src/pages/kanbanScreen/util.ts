@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useLocation } from "react-router";
+import { useDebounce } from "utils";
 import { useProjectInfo } from "utils/project";
+import { useTaskInfo } from "utils/task";
 import { useUrlQueryParam } from "utils/url";
 
 /**
@@ -45,6 +47,7 @@ export const useTasksSearchParams = () => {
     "tagId",
   ]);
   const projectId = useProjectidInUrl();
+  const debounceName = useDebounce(param.name,200)
   return useMemo(
     () => ({
       projectId,
@@ -53,7 +56,7 @@ export const useTasksSearchParams = () => {
       tagId: Number(param.tagId) || undefined,
       name: param.name,
     }),
-    [projectId, param]
+    [projectId, param,debounceName]
   );
 };
 
@@ -62,3 +65,30 @@ export const useTasksSearchParams = () => {
  * @returns 需要变更时的相关依赖
  */
 export const useTasksQuerykey = () => ["tasks", useTasksSearchParams()];
+
+/**
+ *  修改任务，弹窗相关信息
+ * @returns 任务弹窗的相关信息
+ */
+export const useTaskModal = () => {
+  const [{ editingTaskId }, setEditingTaskId] = useUrlQueryParam([
+    "editingTaskId",
+  ]);
+  const { data: editingTask, isLoading } = useTaskInfo(Number(editingTaskId));
+  const startEdit = useCallback(
+    (id: number) => {
+      setEditingTaskId({ editingTaskId: id });
+    },
+    [setEditingTaskId]
+  );
+  const close = useCallback(() => {
+    setEditingTaskId({ editingTaskId: "" });
+  }, [setEditingTaskId]);
+  return {
+    editingTaskId,
+    editingTask,
+    startEdit,
+    close,
+    isLoading,
+  };
+};
