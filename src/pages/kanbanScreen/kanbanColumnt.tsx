@@ -1,28 +1,46 @@
-import { KanbanProps } from "types";
-import { useTasks } from "utils/task";
-import { useTaskModal, useTasksSearchParams } from "./util";
-import { useTaskTypes } from "utils/taskType";
-import { BugTwoTone, CheckSquareTwoTone } from "@ant-design/icons";
 import styled from "@emotion/styled";
-import { Card } from "antd";
-import { SearchPanel } from "./searchPanel";
+import { Button, Card, Dropdown, Menu, Modal } from "antd";
+import { Row } from "components/lib";
+import { KanbanProps } from "types";
+import { useDeleteKanban } from "utils/kanban";
+import { useTasks } from "utils/task";
 import { CreateTask } from "./createTask";
+import { TaskCard } from "./taskCard";
+import { TaskTypeIcon } from "./taskTypeIcon";
+import { useKanbansQueryKey, useTaskModal, useTasksSearchParams } from "./util";
 
-const TaskTypeIcon = ({ id }: { id: number }) => {
-  const { data: taskTypes } = useTaskTypes();
-  const name = taskTypes?.find((taskType) => taskType.id === id)?.name;
-  if (!name) {
-    return null;
-  }
-  return name === "task" ? (
-    <CheckSquareTwoTone />
-  ) : (
-    <BugTwoTone twoToneColor="red" />
+const More = ({ kanban }: { kanban: KanbanProps }) => {
+  const { mutate } = useDeleteKanban(useKanbansQueryKey());
+  const startDelete = () => {
+    Modal.confirm({
+      title: "确定删除看板吗？",
+      content: "点击下方确定按钮删除",
+      okText: "确定",
+      cancelText: "取消",
+      onOk() {
+        return mutate(kanban.id);
+      },
+    });
+  };
+  const overlay = (
+    <Menu>
+      <Menu.Item>
+        <Button onClick={startDelete} type={"link"}>
+          删除
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
+  return (
+    <Dropdown overlay={overlay}>
+      <Button type={"link"}>...</Button>
+    </Dropdown>
   );
 };
+
 /**
  *
- * @param param0
+ * @param 看板相关详细信息
  * @returns 看板列
  */
 export const KanbanColumn = ({ kanban }: { kanban: KanbanProps }) => {
@@ -30,21 +48,15 @@ export const KanbanColumn = ({ kanban }: { kanban: KanbanProps }) => {
   const curProjectTasks = allTasks?.filter(
     (task) => task.kanbanId === kanban.id
   );
-
-  const { startEdit } = useTaskModal();
   return (
     <Container>
-      <h3>{kanban.name}</h3>
+      <Row between>
+        <h3>{kanban.name}</h3>
+        <More kanban={kanban} />
+      </Row>
       <TaskContainer>
         {curProjectTasks?.map((task) => (
-          <Card
-            onClick={() => startEdit(task.id)}
-            style={{ marginBottom: "0.5rem", cursor: "pointer" }}
-            key={task.id}
-          >
-            <div> {task.name}</div>
-            <TaskTypeIcon id={task.typeId} />
-          </Card>
+          <TaskCard task={task} />
         ))}
         <CreateTask kanbanId={kanban.id} />
       </TaskContainer>

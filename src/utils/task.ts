@@ -1,7 +1,7 @@
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { TasksProps } from "types";
 import { useHttp } from "./http";
-import { useAddConfig, useEditConfig } from "./useOptimisticOptions";
+import { useAddConfig, useDeleteConfig, useEditConfig } from "./useOptimisticOptions";
 
 export const useTasks = (param?: Partial<TasksProps>) => {
   const ajax = useHttp();
@@ -43,5 +43,19 @@ export const useEditTask = (queryKey:QueryKey) => {
     (params: Partial<TasksProps>) =>
       ajax(`tasks/${params.id}`, { method: "PATCH", data: params }),
     useEditConfig(queryKey)
+  );
+};
+
+/**
+ * 删除任务
+ * @param queryKey 
+ * @returns 
+ */
+ export const useDeleteTask = (queryKey:QueryKey) => {
+  const ajax = useHttp();
+  return useMutation(
+    (id: number) =>
+      ajax(`tasks/${id}`, { method: "DELETE"}),
+    useDeleteConfig(queryKey)
   );
 };

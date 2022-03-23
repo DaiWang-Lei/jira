@@ -5,6 +5,11 @@ import { useAddTask } from "utils/task";
 import { Container } from "./kanbanColumnt";
 import { useProjectidInUrl, useTasksQuerykey } from "./util";
 
+/**
+ * 向看板列新增任务
+ * @param 看板id
+ * @returns 新增任务卡片
+ */
 export const CreateTask = ({ kanbanId }: { kanbanId: number }) => {
   const [name, setName] = useState("");
   const [inputMode, setInputMode] = useState(false);
