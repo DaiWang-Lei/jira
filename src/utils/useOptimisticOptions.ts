@@ -41,3 +41,6 @@ export const useDeleteConfig = (queryKey: QueryKey) =>
 //添加项目乐观更新
 export const useAddConfig = (queryKey: QueryKey) =>
   useConfig(queryKey, (target, old: any[]) => [...old, target] || []);
+
+export const useReorderConfig = (queryKey: QueryKey) =>
+  useConfig(queryKey, (target, old) => old || []);
