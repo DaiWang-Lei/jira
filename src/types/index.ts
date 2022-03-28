@@ -9,4 +9,5 @@ export * from "./kanpanProps";
 export * from "./tasksProps";
 // bug类型
 export * from "./taskTypeProps";
-
+// 任务组类型
+export * from "./epicProps";
