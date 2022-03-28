@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ProjectModal } from "pages/Project/projectModal";
 import { ProjectPopover } from "components/projectPopover";
 import { useProjectModal } from "pages/Project/util";
+import { UserPopover } from "components/userPopover";
 
 export const AuthenticatedApp = () => {
   return (
@@ -42,7 +43,7 @@ const PageHeader = () => {
           <HeadImg width={"18rem"} color="rgb(28,123,255)" />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <HeadUser />
