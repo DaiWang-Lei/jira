@@ -5,7 +5,7 @@ import {
   useAddConfig,
   useDeleteConfig,
   useEditConfig,
-  useReorderConfig,
+  useReorderTaskConfig,
 } from "./useOptimisticOptions";
 
 export const useTasks = (param?: Partial<TasksProps>) => {
@@ -73,14 +73,12 @@ export type SortProps = {
   fromKanbanId?: number;
   toKanbanId: number;
 };
-export const useReordTask = (queryKey: QueryKey) => {
-  const ajax = useHttp();
-  return useMutation(
-    (params: SortProps) =>
-      ajax("tasks/reorder", {
-        data: params,
-        method: "POST",
-      }),
-      useReorderConfig(queryKey)
-  );
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client("tasks/reorder", {
+      data: params,
+      method: "POST",
+    });
+  }, useReorderTaskConfig(queryKey));
 };

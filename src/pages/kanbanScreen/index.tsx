@@ -5,8 +5,8 @@ import { ScreenContainer } from "components/lib";
 import { useCallback } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { useDocumentTitle } from "utils";
-import { useKanbans, useReordKanban } from "utils/kanban";
-import { useReordTask, useTasks } from "utils/task";
+import { useKanbans, useReorderKanban } from "utils/kanban";
+import { useReorderTask, useTasks } from "utils/task";
 import { CreateKanban } from "./createKanban";
 import { KanbanColumn } from "./kanbanColumnt";
 import { SearchPanel } from "./searchPanel";
@@ -85,9 +85,9 @@ export const ColumnsContainer = styled.div`
  */
 export const useDragEnd = () => {
   const { data: kanbans } = useKanbans(useKanbansSearchParams());
-  const { mutate: reorderKanban } = useReordKanban(useKanbansQueryKey());
+  const { mutate: reorderKanban } = useReorderKanban(useKanbansQueryKey());
 
-  const { mutate: reorderTask } = useReordTask(useTasksQuerykey());
+  const { mutate: reorderTask } = useReorderTask(useTasksQuerykey());
   const { data: allTasks } = useTasks(useTasksSearchParams());
   return useCallback(
     ({ source, destination, type }: DropResult) => {
@@ -103,13 +103,12 @@ export const useDragEnd = () => {
         const type = destination.index > source.index ? "after" : "before";
         reorderKanban({ fromId, referenceId: toId, type });
       }
-
       if (type === "ROW") {
         const fromKanbanId = +source.droppableId;
         const toKanbanId = +destination.droppableId;
-        if (fromKanbanId === toKanbanId) {
-          return;
-        }
+        // if (fromKanbanId === toKanbanId) { //修复同看板列表不能排序问题
+        //   return;
+        // }
         if (!allTasks) {
           return;
         }

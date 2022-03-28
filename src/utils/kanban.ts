@@ -1,7 +1,7 @@
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { KanbanProps } from "types";
 import { useHttp } from "./http";
-import { useAddConfig, useDeleteConfig, useEditConfig, useReorderConfig } from "./useOptimisticOptions";
+import { useAddConfig, useDeleteConfig, useReorderKanbanConfig } from "./useOptimisticOptions";
 
 export const useKanbans = (param?: Partial<KanbanProps>) => {
   const ajax = useHttp();
@@ -41,21 +41,21 @@ export const useDeleteKanban = (queryKey: QueryKey) => {
  * 排序的属性类型
  */
 export type SortProps = {
-  // 要重新排序的item
+  // 要重新排序的 item
   fromId: number;
   // 目标 item
   referenceId: number;
   // 放在目标item的前还是后
   type: "before" | "after";
+  fromKanbanId?: number;
+  toKanbanId?: number;
 };
-export const useReordKanban = (queryKey: QueryKey) => {
-  const ajax = useHttp();
-  return useMutation((params: SortProps) =>
-    ajax("kanbans/reorder", {
+export const useReorderKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client("kanbans/reorder", {
       data: params,
       method: "POST",
-    }),
-    useReorderConfig(queryKey)
-
-  );
+    });
+  }, useReorderKanbanConfig(queryKey));
 };
