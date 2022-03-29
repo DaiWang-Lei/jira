@@ -10,7 +10,7 @@ import right from "assets/right.svg";
 import { useDocumentTitle } from "utils";
 import { ErrorBox } from "components/lib";
 
-export const UnauthenticatedApp = () => {
+export default () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error>();
   useDocumentTitle("Jira任务管理系统", false);
