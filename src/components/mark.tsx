@@ -1,3 +1,5 @@
+import React from "react";
+
 type MarkProps = {
   name: string;
   keyword: string;
